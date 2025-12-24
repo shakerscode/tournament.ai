@@ -76,10 +76,8 @@ const TEAM_NAMES = [
 export default function InstantTeamPage() {
   const [page, setPage] = useState<Page>("list");
   const [players, setPlayers] = useState<Player[]>([]);
-  const [tournaments, setTournaments] = useState<Tournament[]>([]);
-  const [selectedTournament, setSelectedTournament] =
-    useState<Tournament | null>(null);
-
+  const [, setTournaments] = useState<Tournament[]>([]);
+ 
   // UI State
   const [selectedPlayerIds, setSelectedPlayerIds] = useState<Set<string>>(
     new Set()
@@ -106,7 +104,7 @@ export default function InstantTeamPage() {
 
   // Background Music State
   const [bgAudio, setBgAudio] = useState<HTMLAudioElement | null>(null);
-  const [musicVolume, setMusicVolume] = useState(0.1);
+  const [musicVolume,] = useState(0.1);
   const [isMusicMuted, setIsMusicMuted] = useState(false);
 
   // Initialize
