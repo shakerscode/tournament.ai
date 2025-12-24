@@ -1,168 +1,160 @@
-'use client';
+"use client";
 
-import {
-  getPlayers,
-  updatePlayer,
-  getExpenses,
-  addExpense,
-  addGuest,
-  Player,
-  Payment,
-  Expense,
-  deleteExpense,
-  getTournaments,
-  updateTournament,
-} from '@/lib/localDb';
-import Modal from '@/components/Modal';
-import { useEffect, useState } from 'react';
+import { useState } from "react";
 
-interface AdminStats {
-  pendingPlayers: number;
-  approvedPlayers: number;
-  totalExpenses: number;
-  totalCollected: number;
-  remaining: number;
-}
+// interface AdminStats {
+//   pendingPlayers: number;
+//   approvedPlayers: number;
+//   totalExpenses: number;
+//   totalCollected: number;
+//   remaining: number;
+// }
 
 export default function AdminDashboard() {
-  const [players, setPlayers] = useState<Player[]>([]);
-  const [expenses, setExpenses] = useState<Expense[]>([]);
-  const [tournaments, setTournaments] = useState<any[]>([]);
-  const [stats, setStats] = useState<AdminStats>({
-    pendingPlayers: 0,
-    approvedPlayers: 0,
-    totalExpenses: 0,
-    totalCollected: 0,
-    remaining: 0,
-  });
+  // const [players, setPlayers] = useState<Player[]>([]);
+  // const [expenses, setExpenses] = useState<Expense[]>([]);
+  // const [tournaments, setTournaments] = useState<any[]>([]);
+  // const [stats, setStats] = useState<AdminStats>({
+  //   pendingPlayers: 0,
+  //   approvedPlayers: 0,
+  //   totalExpenses: 0,
+  //   totalCollected: 0,
+  //   remaining: 0,
+  // });
 
-  const [isAdmin, setIsAdmin] = useState(false);
-  const [showPaymentModal, setShowPaymentModal] = useState(false);
-  const [showExpenseModal, setShowExpenseModal] = useState(false);
-  const [selectedPlayer, setSelectedPlayer] = useState<Player | null>(null);
+  const [isAdmin] = useState(false);
+  // const [showPaymentModal, setShowPaymentModal] = useState(false);
+  // const [showExpenseModal, setShowExpenseModal] = useState(false);
+  // const [selectedPlayer, setSelectedPlayer] = useState<Player | null>(null);
 
-  const [paymentData, setPaymentData] = useState({ amount: 0, date: '' });
-  const [expenseData, setExpenseData] = useState({
-    description: '',
-    amount: 0,
-    date: new Date().toISOString().split('T')[0],
-  });
+  // const [paymentData, setPaymentData] = useState({ amount: 0, date: '' });
+  // const [expenseData, setExpenseData] = useState({
+  //   description: '',
+  //   amount: 0,
+  //   date: new Date().toISOString().split('T')[0],
+  // });
 
   // Load data
-  useEffect(() => {
-    const loadData = async () => {
-      // Check admin status
-      const admin = localStorage.getItem('isAdmin') === 'true';
-      if (!admin) {
-        // Redirect or show message
-        return;
-      }
-      setIsAdmin(admin);
+  // useEffect(() => {
+  //   const loadData = async () => {
+  //     // Check admin status
+  //     const admin = localStorage.getItem('isAdmin') === 'true';
+  //     if (!admin) {
+  //       // Redirect or show message
+  //       return;
+  //     }
+  //     setIsAdmin(admin);
 
-      const [playersData, expensesData, tournamentsData] = await Promise.all([
-        getPlayers(),
-        getExpenses(),
-        getTournaments(),
-      ]);
+  //     const [playersData, expensesData, tournamentsData] = await Promise.all([
+  //       getPlayers(),
+  //       getExpenses(),
+  //       getTournaments(),
+  //     ]);
 
-      setPlayers(playersData);
-      setExpenses(expensesData);
-      setTournaments(tournamentsData);
+  //     setPlayers(playersData);
+  //     setExpenses(expensesData);
+  //     setTournaments(tournamentsData);
 
-      // Calculate stats
-      const pendingCount = playersData.filter((p) => p.status === 'pending').length;
-      const approvedCount = playersData.filter((p) => p.status === 'approved').length;
-      const totalExp = expensesData.reduce((sum, e) => sum + e.amount, 0);
-      const totalCol = playersData.reduce(
-        (sum, p) => sum + p?.payments.reduce((psum, pay) => psum + pay.amount, 0),
-        0
-      );
+  //     // Calculate stats
+  //     const pendingCount = playersData.filter((p) => p.status === 'pending').length;
+  //     const approvedCount = playersData.filter((p) => p.status === 'approved').length;
+  //     const totalExp = expensesData.reduce((sum, e) => sum + e.amount, 0);
+  //     const totalCol = playersData.reduce(
+  //       (sum, p) => sum + p?.payments.reduce((psum, pay) => psum + pay.amount, 0),
+  //       0
+  //     );
 
-      setStats({
-        pendingPlayers: pendingCount,
-        approvedPlayers: approvedCount,
-        totalExpenses: totalExp,
-        totalCollected: totalCol,
-        remaining: totalCol - totalExp,
-      });
-    };
+  //     setStats({
+  //       pendingPlayers: pendingCount,
+  //       approvedPlayers: approvedCount,
+  //       totalExpenses: totalExp,
+  //       totalCollected: totalCol,
+  //       remaining: totalCol - totalExp,
+  //     });
+  //   };
 
-    loadData();
-  }, []);
+  //   loadData();
+  // }, []);
 
   // Handle player approval
-  const handleApprovePlayer = async (playerId: string) => {
-    await updatePlayer(playerId, { status: 'approved' });
-    const updated = await getPlayers();
-    setPlayers(updated);
-  };
+  // const handleApprovePlayer = async (playerId: string) => {
+  //   await updatePlayer(playerId, { status: 'approved' });
+  //   const updated = await getPlayers();
+  //   setPlayers(updated);
+  // };
 
   // Handle player rejection
-  const handleRejectPlayer = async (playerId: string) => {
-    await updatePlayer(playerId, { status: 'rejected' });
-    const updated = await getPlayers();
-    setPlayers(updated);
-  };
+  // const handleRejectPlayer = async (playerId: string) => {
+  //   await updatePlayer(playerId, { status: 'rejected' });
+  //   const updated = await getPlayers();
+  //   setPlayers(updated);
+  // };
 
   // Handle payment recording
-  const handleRecordPayment = async () => {
-    if (!selectedPlayer || !paymentData.amount || !paymentData.date) return;
+  // const handleRecordPayment = async () => {
+  //   if (!selectedPlayer || !paymentData.amount || !paymentData.date) return;
 
-    const newPayment: Payment = {
-      date: paymentData.date,
-      amount: paymentData.amount,
-    };
+  //   const newPayment: Payment = {
+  //     date: paymentData.date,
+  //     amount: paymentData.amount,
+  //   };
 
-    const updated = await updatePlayer(selectedPlayer.id, {
-      payments: [...selectedPlayer.payments, newPayment],
-    });
+  //   const updated = await updatePlayer(selectedPlayer.id, {
+  //     payments: [...selectedPlayer.payments, newPayment],
+  //   });
 
-    if (updated) {
-      setPlayers(players.map((p) => (p.id === updated.id ? updated : p)));
-      setShowPaymentModal(false);
-      setSelectedPlayer(null);
-      setPaymentData({ amount: 0, date: '' });
-    }
-  };
+  //   if (updated) {
+  //     setPlayers(players.map((p) => (p.id === updated.id ? updated : p)));
+  //     setShowPaymentModal(false);
+  //     setSelectedPlayer(null);
+  //     setPaymentData({ amount: 0, date: '' });
+  //   }
+  // };
 
   // Handle add expense
-  const handleAddExpense = async () => {
-    if (!expenseData.description || !expenseData.amount) return;
+  // const handleAddExpense = async () => {
+  //   if (!expenseData.description || !expenseData.amount) return;
 
-    const newExpense = await addExpense({
-      description: expenseData.description,
-      amount: expenseData.amount,
-      date: expenseData.date,
-    });
+  //   const newExpense = await addExpense({
+  //     description: expenseData.description,
+  //     amount: expenseData.amount,
+  //     date: expenseData.date,
+  //   });
 
-    setExpenses([...expenses, newExpense]);
-    setShowExpenseModal(false);
-    setExpenseData({ description: '', amount: 0, date: new Date().toISOString().split('T')[0] });
-  };
+  //   setExpenses([...expenses, newExpense]);
+  //   setShowExpenseModal(false);
+  //   setExpenseData({ description: '', amount: 0, date: new Date().toISOString().split('T')[0] });
+  // };
 
   // Handle delete expense
-  const handleDeleteExpense = async (expenseId: string) => {
-    await deleteExpense(expenseId);
-    setExpenses(expenses.filter((e) => e.id !== expenseId));
-  };
+  // const handleDeleteExpense = async (expenseId: string) => {
+  //   await deleteExpense(expenseId);
+  //   setExpenses(expenses.filter((e) => e.id !== expenseId));
+  // };
 
-  // if (!isAdmin) {
-  //   return (
-  //     <div className="container-tight py-12 text-center">
-  //       <h1 className="text-4xl font-bold text-primary-red mb-4">Access Denied</h1>
-  //       <p className="text-accent-gray-medium">You don&apos;t have admin access. Please log in as admin.</p>
-  //     </div>
-  //   );
-  // }
+  if (!isAdmin) {
+    return (
+      <div className="container-tight py-12 text-center">
+        <h1 className="text-4xl font-bold text-primary-red mb-4">
+          Access Denied
+        </h1>
+        <p className="text-accent-gray-medium">
+          You don&apos;t have admin access. Please log in as admin.
+        </p>
+      </div>
+    );
+  }
 
-  const pendingPlayers = players.filter((p) => p.status === 'pending');
+  // const pendingPlayers = players.filter((p) => p.status === 'pending');
 
   return (
     <div className="container-tight py-12">
-      <h1 className="text-4xl font-bold text-primary-red mb-8">Admin Dashboard</h1>
+      <h1 className="text-4xl font-bold text-primary-red mb-8">
+        Admin Dashboard
+      </h1>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-12">
+      {/* <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-12">
         <div className="card">
           <div className="text-accent-gray-medium text-sm">Pending Players</div>
           <div className="text-3xl font-bold text-primary-red mt-2">{stats.pendingPlayers}</div>
@@ -185,10 +177,10 @@ export default function AdminDashboard() {
             ৳{stats.remaining}
           </div>
         </div>
-      </div>
+      </div> */}
 
       {/* Pending Players Section */}
-      <div className="mb-12">
+      {/* <div className="mb-12">
         <h2 className="text-2xl font-bold text-primary-red mb-6">Pending Players ({pendingPlayers.length})</h2>
 
         {pendingPlayers.length === 0 ? (
@@ -232,10 +224,10 @@ export default function AdminDashboard() {
             </table>
           </div>
         )}
-      </div>
+      </div> */}
 
       {/* Payments Section */}
-      <div className="mb-12">
+      {/* <div className="mb-12">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-2xl font-bold text-primary-red">Player Payments</h2>
           <button
@@ -260,8 +252,8 @@ export default function AdminDashboard() {
               {players
                 .filter((p) => p.status === 'approved')
                 .map((player) => {
-                  const lastPayment = player.payments[player.payments.length - 1];
-                  const totalPaid = player.payments.reduce((sum, p) => sum + p.amount, 0);
+                  const lastPayment = player?.payments[player?.payments.length - 1];
+                  const totalPaid = player?.payments.reduce((sum, p) => sum + p.amount, 0);
 
                   return (
                     <tr key={player.id}>
@@ -279,10 +271,10 @@ export default function AdminDashboard() {
             </tbody>
           </table>
         </div>
-      </div>
+      </div> */}
 
       {/* Expenses Section */}
-      <div>
+      {/* <div>
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-2xl font-bold text-primary-red">Expenses</h2>
           <button
@@ -322,10 +314,10 @@ export default function AdminDashboard() {
             </tbody>
           </table>
         </div>
-      </div>
+      </div> */}
 
       {/* Payment Modal */}
-      <Modal
+      {/* <Modal
         isOpen={showPaymentModal}
         onClose={() => {
           setShowPaymentModal(false);
@@ -380,10 +372,10 @@ export default function AdminDashboard() {
             Record Payment
           </button>
         </div>
-      </Modal>
+      </Modal> */}
 
       {/* Expense Modal */}
-      <Modal
+      {/* <Modal
         isOpen={showExpenseModal}
         onClose={() => setShowExpenseModal(false)}
         title="Add Expense"
@@ -425,7 +417,7 @@ export default function AdminDashboard() {
             Add Expense
           </button>
         </div>
-      </Modal>
+      </Modal> */}
     </div>
   );
 }
